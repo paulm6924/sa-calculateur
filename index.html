@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur de Semaines d'Aménorrhée (SA)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        input[type="date"] {
+            padding: 10px;
+            margin: 10px 0 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 90%;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #resultat {
+            margin-top: 30px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #28a745; /* Vert pour le résultat */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Calculateur de Semaine d'Aménorrhée </h1>
+        <p>Entrez la date du premier jour de vos dernières règles (DDR) :</p>
+
+        <input type="date" id="ddrInput">
+        <button onclick="calculerSA()">Calculer les Semaines</button>
+
+        <div id="resultat"></div>
+    </div>
+
+    <script>
+        function calculerSA() {
+            const ddrValue = document.getElementById('ddrInput').value;
+            const resultatDiv = document.getElementById('resultat');
+
+            if (!ddrValue) {
+                resultatDiv.innerHTML = "Veuillez entrer une date.";
+                resultatDiv.style.color = 'red';
+                return;
+            }
+
+            // 1. Convertir la date de début (DDR) en millisecondes
+            const ddrDate = new Date(ddrValue);
+            // On s'assure que la date du jour est à minuit pour un calcul précis
+            const aujourdHui = new Date();
+            aujourdHui.setHours(0, 0, 0, 0); 
+
+            // 2. Calculer la différence en millisecondes
+            // (La date du jour moins la DDR)
+            const differenceMs = aujourdHui - ddrDate;
+
+            // 3. Définir les constantes de temps
+            const msParJour = 1000 * 60 * 60 * 24;
+            const joursParSemaine = 7;
+
+            // 4. Calculer le nombre de jours et de semaines
+            const joursEcoules = Math.floor(differenceMs / msParJour);
+            const semainesAménorrhée = Math.floor(joursEcoules / joursParSemaine);
+            const joursRestants = joursEcoules % joursParSemaine;
+
+            // 5. Afficher le résultat
+            if (semainesAménorrhée < 0) {
+                 resultatDiv.innerHTML = "La date entrée est dans le futur. 😅";
+                 resultatDiv.style.color = '#333';
+            } else {
+                 resultatDiv.innerHTML = 
+                     `<span style="color:#28a745; font-size:2em;">${semainesAménorrhée} Semaines d'Aménorrhée </span> 
+                     <br> et ${joursRestants} jours`;
+                 resultatDiv.style.color = '#333';
+            }
+        }
+    </script>
+
+</body>
+</html>
